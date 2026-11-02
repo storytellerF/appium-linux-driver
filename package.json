@@ -1,0 +1,40 @@
+{
+  "name": "appium-linux-compose-driver",
+  "version": "0.1.0",
+  "description": "Appium driver for Linux desktop apps (Compose Desktop / AT-SPI2)",
+  "main": "lib/driver.js",
+  "files": ["lib/"],
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": ["appium", "appium-driver", "linux", "at-spi2", "compose-desktop"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgentStart1/appium-linux-driver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AgentStart1/appium-linux-driver/issues"
+  },
+  "homepage": "https://github.com/AgentStart1/appium-linux-driver#readme",
+  "engines": {
+    "node": "^22.12.0 || >=24.0.0",
+    "npm": ">=10"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "appium": {
+    "driverName": "linux",
+    "automationName": "linux",
+    "platformNames": ["linux"],
+    "mainClass": "LinuxDriver"
+  },
+  "peerDependencies": {
+    "appium": "^2.0.0 || ^3.0.0"
+  },
+  "dependencies": {
+    "@appium/base-driver": "^10.7.1"
+  }
+}
