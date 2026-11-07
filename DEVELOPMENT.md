@@ -5,19 +5,59 @@
 ```sh
 npm ci
 npm test
+npm run test:coverage
 npm pack --dry-run
 ```
 
-The Node.js suite also invokes the Python helper regression suite (`python3` on
-Linux, `python` on Windows). These are unit regressions with mocked AT-SPI
-objects; they do not launch a real graphical application or require pyatspi.
-Real desktop acceptance needs the Linux dependencies and graphical session in
-the README. No Gradle project or original application checkout is needed.
+The Node.js suite invokes all Python helper regressions using unittest discovery
+(`python3` on Linux, `python` on Windows). Unit tests cover session startup and
+cleanup, helper process execution/cancellation/timeouts, WebDriver protocol
+errors, live accessible text/attributes and geometry, selectors, native window
+commands, tree serialization, and release-version validation. Subprocess tests
+launch Node itself and need no graphical session. Python unit tests use mocked
+AT-SPI objects; they do not require pyatspi. Test mocks are restored per case.
 
-`test.yml` runs on every pull request and push to `main`, on Ubuntu with Node.js
-22 and 24. `setup-node` caches npm downloads keyed by `package-lock.json`;
-`npm ci` still installs a clean dependency tree on every run. Obsolete runs for
-the same branch or PR are cancelled.
+`test:coverage` reports JavaScript coverage only, not Python or desktop E2E
+coverage. It is a diagnostic measurement, not a substitute for native acceptance.
+
+### Linux desktop end-to-end tests
+
+Install the Linux runtime packages listed in the README plus the isolated desktop
+tools:
+
+```sh
+sudo apt-get install -y xvfb xauth openbox
+npm run test:e2e
+```
+
+The runner owns a 1280x900 Xvfb display, a window manager and a separate D-Bus
+session. It packs the actual npm distribution, extracts it, installs it through
+Appium's extension CLI, and starts a separate loopback Appium server. Both
+APPIUM_HOME and npm's global-link prefix are unique to the run. An independent
+GTK fixture verifies launch arguments, environment and working directory.
+Scenarios exercise Unicode input and live text/value reads, XPath, window
+resizing, element geometry, PNG dimensions, stale controls, modal dismissal and
+process shutdown. Each case creates its own application session; no manual
+desktop or original application checkout is needed. npm must be on PATH for
+Appium's extension installer. Runtime dependencies are prebuilt; no compilation
+is required.
+
+Raw Appium/install logs, the tested tarball and per-case screenshots/page sources
+are retained under `build/test-results/e2e/run-*`. Diagnostic collection failures
+are recorded separately. Closing a session waits for application termination;
+the runner shuts down its Appium server and owned display session afterward.
+
+### CI
+
+`test.yml` runs on every PR and push to `main`. Unit tests run on Ubuntu with
+Node.js 22 and 24. Desktop E2E runs sequential scenarios on separate Ubuntu jobs
+for Appium 2 and 3 with Node.js 24. Every E2E job tests the packaged extension,
+and uploads its diagnostics even when an assertion fails.
+
+`setup-node` caches npm downloads using `package-lock.json`; `npm ci` still
+installs a clean tree. The E2E compatibility jobs then select the target Appium
+major without changing the lockfile. Obsolete runs for a branch or PR are
+cancelled.
 
 ## Releases
 

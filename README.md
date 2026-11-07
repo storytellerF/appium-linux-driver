@@ -60,7 +60,10 @@ preserve spaces. Closing the session terminates the launched process.
 
 The driver supports name and a limited XPath locator subset, text entry,
 clicking, live element geometry/state, window resizing/movement, page source and
-PNG screenshots. `class name` currently uses the same matching as `name`.
+PNG screenshots. Text and attributes are read from the current accessible
+object. Supported attributes are `name`, `description`, `role`, `value` and
+`enabled`; unsupported attributes return null. `class name` currently uses the
+same matching as `name`.
 Element identities include their D-Bus connection and object path; disappeared
 elements report a stale-element error. Window commands require exactly one
 visible window owned by the launched process.

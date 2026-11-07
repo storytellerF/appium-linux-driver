@@ -31,16 +31,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
           RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
-        run: |
-          node <<'NODE'
-          const { version } = require('./package.json');
-          if (process.env.RELEASE_TAG !== `v${version}`) {
-            throw new Error(`Release tag must be v${version}`);
-          }
-          if (version.includes('-') !== (process.env.RELEASE_PRERELEASE === 'true')) {
-            throw new Error('Package version and GitHub Release prerelease status must agree');
-          }
-          NODE
+        run: node scripts/validate-release.cjs
       - run: npm ci
       - run: npm test
       - run: npm pack --dry-run

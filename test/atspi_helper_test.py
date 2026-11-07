@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 import types
 import unittest
+import unittest.mock
 
 sys.dont_write_bytecode = True
 sys.modules['pyatspi'] = types.SimpleNamespace(STATE_DEFUNCT='defunct', STATE_ENABLED='enabled', STATE_SHOWING='showing')
@@ -50,13 +51,13 @@ class Node:
 
 class SetTextTest(unittest.TestCase):
     def run_command(self, children, path=':1.1/saved'):
-        helper.wait_for_app = lambda *args: Node('/app', children)
-        helper.wait_for_elements = lambda *args: self.fail('Must not re-find by selector')
         command = dict(action='set_text', pid=1, path=path, index=0,
                        selector='duplicate', text='requested')
         with contextlib.redirect_stdout(io.StringIO()) as output:
             with unittest.mock.patch.object(sys, 'stdin', io.StringIO(json.dumps(command))):
-                helper.main()
+                with unittest.mock.patch.object(helper, 'wait_for_app', return_value=Node('/app', children)):
+                    with unittest.mock.patch.object(helper, 'wait_for_elements', side_effect=AssertionError('Must not re-find by selector')):
+                        helper.main()
         return json.loads(output.getvalue())
 
     def test_reordered_duplicate_uses_saved_path(self):

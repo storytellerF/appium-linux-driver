@@ -380,6 +380,28 @@ def main():
         cx, cy = get_center(target)
         print(json.dumps({"ok": ok, "action": action_name, "cx": cx, "cy": cy}))
 
+    elif action == "element_info":
+        app = get_app(cmd["pid"])
+        target = find_by_path(app, cmd.get("path"))
+        if target is None:
+            print(json.dumps({"ok": False, "stale": True, "error": "element no longer exists"}))
+            return
+        try:
+            name = target.name or ""
+            try:
+                text = target.queryText().getText(0, -1)
+            except NotImplementedError:
+                text = None
+            state = target.getState()
+            attributes = {"name": name, "description": target.description or "",
+                          "role": target.getRoleName(), "value": text,
+                          "enabled": state.contains(pyatspi.STATE_ENABLED)}
+            print(json.dumps({"ok": True, "text": text if text is not None else name, "attributes": attributes}))
+        except Exception as error:
+            stale = find_by_path(get_app(cmd["pid"]), cmd.get("path")) is None
+            print(json.dumps({"ok": False, "stale": stale,
+                              "error": "element no longer exists" if stale else str(error)}))
+
     elif action == "element_geometry":
         app = get_app(cmd["pid"])
         target = find_by_path(app, cmd.get("path"))
