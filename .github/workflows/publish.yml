@@ -32,9 +32,19 @@ jobs:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
           RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
         run: node scripts/validate-release.cjs
+      - name: Restore npm downloads
+        id: npm-cache
+        uses: ./.github/actions/restore-npm-cache
+        with:
+          variant: node-24
       - run: npm ci
       - run: npm test
       - run: npm pack --dry-run
+      - name: Save npm download snapshot
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ steps.npm-cache.outputs.path }}
+          key: ${{ steps.npm-cache.outputs.key }}
       - name: Publish package
         run: npm publish --provenance --access public --tag "$NPM_DIST_TAG"
         env:

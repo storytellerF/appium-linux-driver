@@ -54,10 +54,24 @@ Node.js 22 and 24. Desktop E2E runs sequential scenarios on separate Ubuntu jobs
 for Appium 2 and 3 with Node.js 24. Every E2E job tests the packaged extension,
 and uploads its diagnostics even when an assertion fails.
 
-`setup-node` caches npm downloads using `package-lock.json`; `npm ci` still
-installs a clean tree. The E2E compatibility jobs then select the target Appium
-major without changing the lockfile. Obsolete runs for a branch or PR are
-cancelled.
+The test and publishing workflows explicitly restore/save the npm download
+cache with `actions/cache`; `setup-node` caching is disabled. `node_modules` is
+never cached, and every job still installs a clean dependency tree with `npm ci`.
+The E2E compatibility jobs then select their Appium major without changing the
+lockfile.
+
+All jobs restore the most recent accessible snapshot matching
+`npm-downloads-v1-<OS>-<architecture>-`, independent of lockfile changes. After
+successful checks, they save the expanded download cache with a fresh key that
+also includes the run ID, run attempt, job and matrix variant. Parallel jobs and
+reruns therefore write separate snapshots, including when restoration matched
+an older snapshot. Publishing uses the same prefix and saves before the publish
+step; a publication is not needed to validate the shared cache operations.
+
+GitHub's native cache scope isolation is preserved: PR jobs can restore eligible
+main-branch snapshots, while PR snapshots remain scoped to their PR ref. GitHub
+manages cache retention and capacity eviction; there is no custom cleanup.
+Obsolete workflow runs for a branch or PR are cancelled.
 
 ## Releases
 
@@ -78,7 +92,7 @@ Tags must equal `v` plus the package version. A prerelease version such as
 not publish. npm versions are immutable: corrections require a new version.
 
 The publish job uses Node.js 24 and its npm 11 CLI, with `id-token: write` and
-provenance. It does not restore dependency caches in the publishing job.
+provenance. It shares the npm download snapshot scheme described above.
 
 ### npm authentication setup
 
