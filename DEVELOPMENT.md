@@ -86,7 +86,7 @@ For an existing package, configure an npm **Trusted Publisher** in the package
 settings with:
 
 - GitHub organization/user: the owner of the repository running the workflow
-  (this fork: `AgentStart1`).
+  (`storytellerF` for the upstream repository).
 - Repository: `appium-linux-driver`.
 - Workflow filename: `publish.yml`.
 - Environment: leave blank (the workflow does not declare an environment).

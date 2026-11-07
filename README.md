@@ -72,4 +72,4 @@ The execute command `linux: dismissDialog` sends Escape; the WebDriver back
 command sends Alt+Left. Keyboard commands act on the current desktop focus, so
 use an isolated desktop for unattended automation.
 
-See [DEVELOPMENT.md](https://github.com/AgentStart1/appium-linux-driver/blob/main/DEVELOPMENT.md) for tests and npm releases.
+See [DEVELOPMENT.md](https://github.com/storytellerF/appium-linux-driver/blob/main/DEVELOPMENT.md) for tests and npm releases.

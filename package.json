@@ -13,12 +13,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AgentStart1/appium-linux-driver.git"
+    "url": "git+https://github.com/storytellerF/appium-linux-driver.git"
   },
   "bugs": {
-    "url": "https://github.com/AgentStart1/appium-linux-driver/issues"
+    "url": "https://github.com/storytellerF/appium-linux-driver/issues"
   },
-  "homepage": "https://github.com/AgentStart1/appium-linux-driver#readme",
+  "homepage": "https://github.com/storytellerF/appium-linux-driver#readme",
   "engines": {
     "node": "^22.12.0 || >=24.0.0",
     "npm": ">=10"
