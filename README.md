@@ -1,18 +1,17 @@
 # appium-linux-driver
 
-An Appium driver for Linux desktop applications, including Compose Desktop,
-using open-source AT-SPI2 accessibility APIs. The npm package is
-`appium-linux-compose-driver`; the Appium driver and automation name are `linux`.
+面向 Linux 桌面应用（包括 Compose Desktop）的 Appium 驱动，使用开源 AT-SPI2 无障碍 API。npm 包名为 `appium-linux-compose-driver`；Appium 驱动名和 automation name 均为 `linux`。
 
-## Requirements
+<a id="requirements"></a>
 
-- Linux with a working X11 display and desktop session D-Bus. For unattended use,
-  provide a nonzero-size virtual display and a window manager.
-- Node.js 22.12+ (22.x), or 24+, npm 10+, and Appium 2 or 3.
-- Python 3 with pyatspi and GDK 3, plus xdotool, xdpyinfo and gdbus.
-- An application that exposes an AT-SPI accessibility tree.
+## 环境要求
 
-On Ubuntu/Debian, install the desktop dependencies with:
+- Linux，具备可用的 X11 显示和桌面会话 D-Bus。无人值守运行时，需要非零尺寸的虚拟显示和窗口管理器。
+- Node.js 22.12+（22.x）或 24+，npm 10+，以及 Appium 2 或 3。
+- Python 3，安装 pyatspi 和 GDK 3，以及 xdotool、xdpyinfo 和 gdbus。
+- 应用需要暴露 AT-SPI 无障碍树。
+
+Ubuntu/Debian 可通过以下命令安装桌面依赖：
 
 ```sh
 sudo apt-get update
@@ -20,28 +19,30 @@ sudo apt-get install -y python3-pyatspi python3-gi gir1.2-gtk-3.0 \
   at-spi2-core xdotool x11-utils libglib2.0-bin dbus-x11
 ```
 
-The driver invokes `python3` from PATH. Use the system Python containing these
-packages. Run Appium in the same graphical and D-Bus session as the application.
-Native Wayland-only sessions are not supported by the X11 window/input helpers.
+驱动调用 PATH 中的 `python3`，应使用安装了上述包的系统 Python。Appium 应与应用运行在同一图形和 D-Bus 会话中。X11 窗口和输入辅助程序不支持纯原生 Wayland 会话。
 
-## Installation
+<a id="installation"></a>
 
-After the package has been published to npm:
+## 安装
+
+包发布到 npm 后：
 
 ```sh
 appium driver install --source=npm appium-linux-compose-driver
 ```
 
-To install this checkout before the first release:
+首次发布前，可安装当前检出版本：
 
 ```sh
 npm ci
 appium driver install --source=local "$PWD"
 ```
 
-## Session capabilities
+<a id="session-capabilities"></a>
 
-Start Appium, then create a session with capabilities such as:
+## 会话 capabilities
+
+启动 Appium，再使用如下 capabilities 创建会话：
 
 ```json
 {
@@ -54,22 +55,10 @@ Start Appium, then create a session with capabilities such as:
 }
 ```
 
-`app` must be the executable that owns the accessible application process, rather
-than a launcher that forks a different process. Prefer an argument array to
-preserve spaces. Closing the session terminates the launched process.
+`app` 必须是拥有应用无障碍进程的可执行文件，而不能是派生另一个进程的启动器。优先使用参数数组，以保留空格。关闭会话会终止启动的进程。
 
-The driver supports name and a limited XPath locator subset, text entry,
-clicking, live element geometry/state, window resizing/movement, page source and
-PNG screenshots. Text and attributes are read from the current accessible
-object. Supported attributes are `name`, `description`, `role`, `value` and
-`enabled`; unsupported attributes return null. `class name` currently uses the
-same matching as `name`.
-Element identities include their D-Bus connection and object path; disappeared
-elements report a stale-element error. Window commands require exactly one
-visible window owned by the launched process.
+驱动支持 name 定位和有限的 XPath 定位子集、文本输入、点击、实时元素几何信息和状态、窗口缩放与移动、页面源码和 PNG 截图。文本和属性从当前无障碍对象读取。支持的属性为 `name`、`description`、`role`、`value` 和 `enabled`；不支持的属性返回 null。`class name` 当前采用与 `name` 相同的匹配方式。元素标识包括 D-Bus 连接和对象路径；元素消失时报告 stale-element 错误。窗口命令要求启动的进程恰好拥有一个可见窗口。
 
-The execute command `linux: dismissDialog` sends Escape; the WebDriver back
-command sends Alt+Left. Keyboard commands act on the current desktop focus, so
-use an isolated desktop for unattended automation.
+execute 命令 `linux: dismissDialog` 发送 Escape；WebDriver back 命令发送 Alt+Left。键盘命令作用于当前桌面焦点，因此无人值守自动化应使用隔离桌面。
 
-See [DEVELOPMENT.md](https://github.com/storytellerF/appium-linux-driver/blob/main/DEVELOPMENT.md) for tests and npm releases.
+测试与 npm 发布说明见 [DEVELOPMENT.md](https://github.com/storytellerF/appium-linux-driver/blob/main/DEVELOPMENT.md)。
