@@ -2,8 +2,6 @@
 
 面向 Linux 桌面应用（包括 Compose Desktop）的 Appium 驱动，使用开源 AT-SPI2 无障碍 API。npm 包名为 `appium-linux-compose-driver`；Appium 驱动名和 automation name 均为 `linux`。
 
-<a id="requirements"></a>
-
 ## 环境要求
 
 - Linux，具备可用的 X11 显示和桌面会话 D-Bus。无人值守运行时，需要非零尺寸的虚拟显示和窗口管理器。
@@ -21,8 +19,6 @@ sudo apt-get install -y python3-pyatspi python3-gi gir1.2-gtk-3.0 \
 
 驱动调用 PATH 中的 `python3`，应使用安装了上述包的系统 Python。Appium 应与应用运行在同一图形和 D-Bus 会话中。X11 窗口和输入辅助程序不支持纯原生 Wayland 会话。
 
-<a id="installation"></a>
-
 ## 安装
 
 包发布到 npm 后：
@@ -37,8 +33,6 @@ appium driver install --source=npm appium-linux-compose-driver
 npm ci
 appium driver install --source=local "$PWD"
 ```
-
-<a id="session-capabilities"></a>
 
 ## 会话 capabilities
 

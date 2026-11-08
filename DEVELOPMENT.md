@@ -1,8 +1,4 @@
-<a id="development"></a>
-
 # 开发
-
-<a id="tests"></a>
 
 ## 测试
 
@@ -16,8 +12,6 @@ npm pack --dry-run
 Node.js 测试套件通过 unittest discovery 调用全部 Python 辅助程序回归测试（Linux 使用 `python3`，Windows 使用 `python`）。单元测试覆盖会话启动与清理、辅助进程执行和取消及超时、WebDriver 协议错误、实时无障碍文本与属性及几何信息、选择器、原生窗口命令、树序列化和发布版本验证。子进程测试启动 Node 自身，不需要图形会话。Python 单元测试使用模拟 AT-SPI 对象，不需要 pyatspi。每个用例结束后恢复模拟对象。
 
 `test:coverage` 只报告 JavaScript 覆盖率，不包含 Python 或桌面 E2E 覆盖率。它是诊断指标，不能替代原生验收。
-
-<a id="linux-desktop-end-to-end-tests"></a>
 
 ### Linux 桌面端到端测试
 
@@ -42,8 +36,6 @@ npm run test:e2e
 
 保留 GitHub 原生缓存范围隔离：PR job 可恢复符合条件的 main 分支快照，PR 快照仍仅属于对应 PR ref。GitHub 管理缓存保留与容量淘汰，没有自定义清理。分支或 PR 的过时 workflow 运行会被取消。
 
-<a id="releases"></a>
-
 ## 发布
 
 发布由**发布 GitHub Release** 触发，使用 `release: published`，而不是推送 tag。这为维护者提供明确的发布步骤并支持草稿。Workflow 检出 tag 指向的提交，验证版本并重新运行测试，然后发布。
@@ -56,8 +48,6 @@ npm run test:e2e
 Tag 必须等于 `v` 加包版本。`0.2.0-beta.1` 等预发布版本必须标记为 GitHub prerelease，并发布到 npm 的 `next` 标签；稳定版本使用 `latest`。草稿 release 和单独推送 tag 都不会发布。npm 版本不可变，修正必须使用新版本。
 
 Publish job 使用 Node.js 24 及其 npm 11 CLI，具有 `id-token: write` 权限并启用 provenance，沿用上述 npm 下载快照方案。
-
-<a id="npm-authentication-setup"></a>
 
 ### npm 身份验证配置
 
